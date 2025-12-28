@@ -46,10 +46,10 @@ KDIR = /home/yaya/D/Workspace/CyberQuantum/JinHaoYue/amls905x3/SDK/20191101-0tt-
 endif
 
 ifeq ($(CONFIG_PLATFORM_UBUNTU), y)
-KVER := $(or $(KVER), $(kernelver), $(KERNELRELEASE), $(shell uname -r))
+KVER ?= $(shell uname -r)
 KDIR ?= /lib/modules/$(KVER)/build
 PWD  ?= $(shell pwd)
-MODDESTDIR ?= /lib/modules/$(KVER)/kernel/drivers/net/wireless/aic8800
+MODDESTDIR ?= /lib/modules/$(KVER)/extra
 ARCH ?= $(shell uname -m | sed -e s/i.86/i386/ -e s/armv.l/arm/ -e s/aarch64/arm64/)
 CROSS_COMPILE ?=
 endif
@@ -59,20 +59,22 @@ endif
 
 all: modules
 modules:
-	make -C $(KDIR) M=$(PWD) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) modules
+	make -j`nproc --ignore=1` -C $(KDIR) M=$(PWD) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) modules
 
 install:
-	mkdir -p $(MODDESTDIR)
-	install -p -m 644 aic_load_fw/aic_load_fw.ko  $(MODDESTDIR)/
-	install -p -m 644 aic8800_fdrv/aic8800_fdrv.ko  $(MODDESTDIR)/
+	strip -g aic_load_fw/aic_load_fw.ko aic8800_fdrv/aic8800_fdrv.ko
+	@install -Dvm 644 -t $(MODDESTDIR)/aic8800 aic_load_fw/aic_load_fw.ko 
+	@install -Dvm 644 -t $(MODDESTDIR)/aic8800 aic8800_fdrv/aic8800_fdrv.ko
 	/sbin/depmod -a ${KVER}
+	cp -r firmware/* /lib/firmware/
+	cp aic.rules /usr/lib/udev/rules.d/
 
 uninstall:
-	rm -rfv $(MODDESTDIR)/aic_load_fw.ko
-	rm -rfv $(MODDESTDIR)/aic8800_fdrv.ko
+	@rm -rfv $(MODDESTDIR)/aic8800
+	@rmdir -v --ignore-fail-on-non-empty $(MODDESTDIR) || true
 	/sbin/depmod -a ${KVER}
+	rm -rf /lib/firmware/aic8800*
+	rm -f /usr/lib/udev/rules.d/aic.rules
 
 clean:
-	cd aic_load_fw/;make clean;cd ..
-	cd aic8800_fdrv/;make clean;cd ..
-	rm -rf modules.order Module.symvers .modules.order.cmd .Module.symvers.cmd .tmp_versions/
+	make -C $(KDIR) M=$(PWD) clean
