@@ -2155,6 +2155,8 @@ static int aicwf_parse_usb(struct aic_usb_dev *usb_dev, struct usb_interface *in
 			usb_dev->chipid = PRODUCT_ID_AIC8800DW;
 		} else if (usb_dev->chipid == PRODUCT_ID_AIC8800D81) {
             AICWFDBG(LOGINFO, "AIC8800D80\n");
+		} else if (usb_dev->chipid == PRODUCT_ID_AIC8800DW) {
+            AICWFDBG(LOGINFO, "AIC8800DW\n");
 		} else if(usb_dev->chipid == PRODUCT_ID_AIC8800D81X2 ||
                 usb_dev->chipid == PRODUCT_ID_AIC8800D89X2 ||
                 usb_dev->chipid == PRODUCT_ID_AIC8800D81){
@@ -2348,10 +2350,11 @@ static int aicwf_usb_chipmatch(struct aic_usb_dev *usb_dev, u16_l vid, u16_l pid
 		usb_dev->chipid = PRODUCT_ID_AIC8800DC;
 		AICWFDBG(LOGINFO, "%s USE AIC8800DC\r\n", __func__);
 		return 0;
-	}else if(pid == USB_PRODUCT_ID_AIC8800DW){
-        usb_dev->chipid = PRODUCT_ID_AIC8800DW;
+	}else if(pid == USB_PRODUCT_ID_AIC8800DW ||
+		(vid == 0x3625 && pid == 0x0110)) {
+        	usb_dev->chipid = PRODUCT_ID_AIC8800DW;
 		AICWFDBG(LOGINFO, "%s USE AIC8800DW\r\n", __func__);
-        return 0;
+       		return 0;
     }else if(pid == USB_PRODUCT_ID_AIC8800D81 || pid == USB_PRODUCT_ID_AIC8800D41
 		|| pid == USB_PRODUCT_ID_TENDA_U11 || pid == USB_PRODUCT_ID_TENDA_U11_PRO
 		|| pid == USB_PRODUCT_ID_AIC8800M80_CUS1 || pid == USB_PRODUCT_ID_AIC8800M80_CUS2
@@ -2678,6 +2681,8 @@ static struct usb_device_id aicwf_usb_id_table[] = {
     {USB_DEVICE(USB_VENDOR_ID_AIC_V2, USB_PRODUCT_ID_AIC8800M80_CUS6)},
     {USB_DEVICE(USB_VENDOR_ID_AIC_V2, USB_PRODUCT_ID_AIC8800M80_CUS7)},
     {USB_DEVICE(USB_VENDOR_ID_AIC_V2, USB_PRODUCT_ID_AIC8800M80_CUS8)},
+    /* TP-Link Archer TX1U Nano */
+    {USB_DEVICE(0x3625, 0x0110)},
 #endif
     {}
 };
