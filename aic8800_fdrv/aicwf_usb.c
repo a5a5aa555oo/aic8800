@@ -2683,6 +2683,8 @@ static struct usb_device_id aicwf_usb_id_table[] = {
     {USB_DEVICE(USB_VENDOR_ID_AIC_V2, USB_PRODUCT_ID_AIC8800M80_CUS8)},
     /* TP-Link Archer TX1U Nano */
     {USB_DEVICE(0x3625, 0x0110)},
+    /* Noname AX900 adapter */
+    {USB_DEVICE(0xa69c, 0x8d83)},
 #endif
     {}
 };
