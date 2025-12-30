@@ -2361,7 +2361,8 @@ static int aicwf_usb_chipmatch(struct aic_usb_dev *usb_dev, u16_l vid, u16_l pid
 		|| pid == USB_PRODUCT_ID_AIC8800M80_CUS3 || pid == USB_PRODUCT_ID_AIC8800M80_CUS4
 		|| pid == USB_PRODUCT_ID_AIC8800M80_CUS5 || pid == USB_PRODUCT_ID_AIC8800M80_CUS6
 		|| pid == USB_PRODUCT_ID_AIC8800M80_CUS7 || pid == USB_PRODUCT_ID_AIC8800M80_CUS8
-		|| (vid == 0x2357 && pid == 0x014b)){
+		|| (vid == 0x2357 && pid == 0x014b)
+		|| (vid == 0x368b && pid == 0x8d88)){
         usb_dev->chipid = PRODUCT_ID_AIC8800D81;
         aicwf_usb_rx_aggr = true;
         AICWFDBG(LOGINFO, "%s USE AIC8800D81\r\n", __func__);
@@ -2688,6 +2689,8 @@ static struct usb_device_id aicwf_usb_id_table[] = {
     {USB_DEVICE(0xa69c, 0x8d83)},
     /* MERCURY */
     {USB_DEVICE(0x2357, 0x014b)},
+    /* UGREEN AX900 */
+    {USB_DEVICE(0x368b, 0x8d88)},
 #endif
     {}
 };
