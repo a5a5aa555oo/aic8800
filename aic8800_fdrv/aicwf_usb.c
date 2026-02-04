@@ -2351,6 +2351,7 @@ static int aicwf_usb_chipmatch(struct aic_usb_dev *usb_dev, u16_l vid, u16_l pid
 		AICWFDBG(LOGINFO, "%s USE AIC8800DC\r\n", __func__);
 		return 0;
 	}else if(pid == USB_PRODUCT_ID_AIC8800DW ||
+		(vid == 0x2357 && pid == 0x0147) ||
 		(vid == 0x3625 && pid == 0x0110)) {
         	usb_dev->chipid = PRODUCT_ID_AIC8800DW;
 		AICWFDBG(LOGINFO, "%s USE AIC8800DW\r\n", __func__);
@@ -2688,6 +2689,8 @@ static struct usb_device_id aicwf_usb_id_table[] = {
     {USB_DEVICE(0x3625, 0x0110)},
     /* Noname AX900 adapter */
     {USB_DEVICE(0xa69c, 0x8d83)},
+    /* 8800DC */
+    {USB_DEVICE(0x2357, 0x0147)},
     /* MERCURY */
     {USB_DEVICE(0x2357, 0x014b)},
     /* UGREEN AX900 */
